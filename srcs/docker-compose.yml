@@ -1,0 +1,23 @@
+# ??
+version:
+
+# the containers ??
+services:
+    #container name ??:
+      image:
+      build:
+      volumes:
+      environment:
+      container_name:
+      image_name: 
+      networks:
+      ports:
+      command:
+      depends_on:
+
+volumes:
+
+networks:
+      #for wordpress
+      #for mariadb
+
