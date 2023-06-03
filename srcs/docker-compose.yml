@@ -1,23 +1,88 @@
-# ??
-version:
+version: '3'
 
-# the containers ??
 services:
-    #container name ??:
-      image:
-      build:
-      volumes:
-      environment:
-      container_name:
-      image_name: 
-      networks:
+  nginx:
+    build:
+      context:
+      dockerfile: requirements/nginx/Dockerfile
+    # image: nginx:stable-alpine
+    volumes:
+      - ./requirements/nginx/conf/:/etc/nginx/http.d/
+      - ./requirements/nginx/tools:/etc/nginx/ssl/
+      - wp-volume:/var/www/
+    # restart: alway (is it needed??)
+    ports:
+      - "443:443"
+    container_name: nginx
+    # image_name: nginx
+    # depends_on:
+    #   - wordpress
+    
+  mariadb:
+    build:
+      context: .
+      dockerfile: mariadb/Dockerfile
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+        DB_ROOT: ${DB_ROOT}
+      container_name: mariadb
       ports:
-      command:
+        - "3306:3306"
+      restart: always
+
+  wordpress:
+    build:
+      context: .
+      dockerfile: requirements/wordpress/Dockerfile
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+      container_name: wordpress
       depends_on:
+        - mariadb
+      restart: always
+      volumes:
+      - wp-volume:/var/www/
 
 volumes:
+  wp-volume:
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/${USER}/data/wordpress
+
+  db-volume:
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/${USER}/data/mariadb
 
 networks:
-      #for wordpress
-      #for mariadb
+    inception:
+        driver: bridge
 
+# ??
+# version:
+
+# # the containers ??
+# services:
+#     #container name ??:
+#       image:
+#       build:
+#       volumes:
+#       environment:
+#       container_name:
+#       image_name: 
+#       networks:
+#       ports:
+#       command:
+#       depends_on:
+
+# volumes:
+
+# networks:
+#       #for wordpress
+#       #for mariadb
