@@ -6,7 +6,7 @@
 #    By: arafeeq <arafeeq@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/02 05:03:42 by arafeeq           #+#    #+#              #
-#    Updated: 2023/06/03 06:19:10 by arafeeq          ###   ########.fr        #
+#    Updated: 2023/06/05 03:57:39 by arafeeq          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
 EXPOSE 3306
 
 # Copy the <file> file from its location to <location>
-COPY tools/db.sh .
+COPY requirements/mariadb/conf/create_db.sh .
 
 RUN sh create_db.sh && rm create_db.sh
 

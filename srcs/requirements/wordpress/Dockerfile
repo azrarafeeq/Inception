@@ -6,7 +6,7 @@
 #    By: arafeeq <arafeeq@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/02 05:03:42 by arafeeq           #+#    #+#              #
-#    Updated: 2023/06/03 06:25:39 by arafeeq          ###   ########.fr        #
+#    Updated: 2023/06/05 04:06:20 by arafeeq          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,6 @@ ARG PHP_VERSION=8 \
     DB_NAME \
     DB_USER \
     DB_PASS
-
-# set our wrkdir. The following instructions will be executed in this location.
-WORKDIR /var/www
 
 # dependencies needed
 RUN apk update && apk upgrade && apk add --no-cache \
@@ -36,29 +33,30 @@ RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION}-openssl \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
-	wget \
-	unzip && \
-	sed -i "s|listen = 127.0.0.1:9000|listen = 9000|g" \
-    /etc/php8/php-fpm.d/www.conf \
+    php${PHP_VERSION}-redis \
+    wget \
+    unzip && \
+    sed -i "s|listen = 127.0.0.1:9000|listen = 9000|g" \
+      /etc/php8/php-fpm.d/www.conf && \
     sed -i "s|;listen.owner = nobody|listen.owner = nobody|g" \
-    /etc/php8/php-fpm.d/www.conf \
+      /etc/php8/php-fpm.d/www.conf && \
     sed -i "s|;listen.group = nobody|listen.group = nobody|g" \
-    /etc/php8/php-fpm.d/www.conf \
-    && rm -f /var/cache/apk/*
-
-# to create an environment variable.
-# We can access ENV values during the build, as well as once the container runs.
-# ENV
-
+      /etc/php8/php-fpm.d/www.conf && \
+    rm -f /var/cache/apk/*
+WORKDIR /var/www
 RUN wget https://wordpress.org/latest.zip && \
     unzip latest.zip && \
     cp -rf wordpress/* . && \
     rm -rf wordpress latest.zip
 
-# Copy the <file> file from <location> to WRKDIR location
-COPY /requirements/wordpress/conf/wp-config-create.sh .
+# to create an environment variable.
+# We can access ENV values during the build, as well as once the container runs.
+# ENV
 
-RUN sh wp-config-create.sh && rm wp-config-create.sh && \
+# Copy the <file> file from <location> to the mentione location
+COPY ./requirements/wordpress/conf/wp_config_create.sh .
+
+RUN sh wp_config_create.sh && rm wp_config_create.sh && \
     chmod -R 0777 wp-content/
 
 # command that is executed on 'docker container run'

@@ -3,7 +3,7 @@ version: '3'
 services:
   nginx:
     build:
-      context:
+      context: .
       dockerfile: requirements/nginx/Dockerfile
     # image: nginx:stable-alpine
     volumes:
@@ -13,6 +13,10 @@ services:
     # restart: alway (is it needed??)
     ports:
       - "443:443"
+    networks:
+      - incep_net
+    depends_on:
+      - wordpress
     container_name: nginx
     # image_name: nginx
     # depends_on:
@@ -21,16 +25,16 @@ services:
   mariadb:
     build:
       context: .
-      dockerfile: mariadb/Dockerfile
+      dockerfile: requirements/mariadb/Dockerfile
       args:
         DB_NAME: ${DB_NAME}
         DB_USER: ${DB_USER}
         DB_PASS: ${DB_PASS}
         DB_ROOT: ${DB_ROOT}
-      container_name: mariadb
-      ports:
-        - "3306:3306"
-      restart: always
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    restart: always
 
   wordpress:
     build:
@@ -40,11 +44,13 @@ services:
         DB_NAME: ${DB_NAME}
         DB_USER: ${DB_USER}
         DB_PASS: ${DB_PASS}
-      container_name: wordpress
-      depends_on:
-        - mariadb
-      restart: always
-      volumes:
+    container_name: wordpress
+    depends_on:
+      - mariadb
+    networks:
+      - incep_net
+    restart: always
+    volumes:
       - wp-volume:/var/www/
 
 volumes:
@@ -61,15 +67,13 @@ volumes:
       device: /home/${USER}/data/mariadb
 
 networks:
-    inception:
+    incep_net:
         driver: bridge
 
-# ??
 # version:
 
-# # the containers ??
 # services:
-#     #container name ??:
+    #container:
 #       image:
 #       build:
 #       volumes:

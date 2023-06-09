@@ -6,7 +6,7 @@
 #    By: arafeeq <arafeeq@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/03 05:12:57 by arafeeq           #+#    #+#              #
-#    Updated: 2023/06/03 06:38:38 by arafeeq          ###   ########.fr        #
+#    Updated: 2023/06/05 04:08:01 by arafeeq          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,16 +15,16 @@ NAME = inception
 all:
 	@printf "Launching\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
-	@docker-compose -f ./docker-compose.yml --env-file srcs/.env up -d
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d
 	
 build:
 	@printf "Deploying / Building\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
-	@docker-compose -f ./docker-compose.yml --env-file srcs/.env up -d --build
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
 
 down:
 	@printf "Stopping\n"
-	@docker-compose -f ./docker-compose.yml --env-file srcs/.env down
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env down
 
 clean: down
 	@printf "Cleaning images and data in voloumes\n"
@@ -42,6 +42,6 @@ fclean:
 	@sudo rm -rf ~/data/wordpress/*
 	@sudo rm -rf ~/data/mariadb/*
 
-re:
+re: down
 	@printf "Rebuilding\n"
-	@docker-compose -f ./docker-compose.yml --env-file srcs/.env up -d --build
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
