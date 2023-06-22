@@ -10,7 +10,6 @@ services:
       - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - wp-volume:/var/www/
-    # restart: alway (is it needed??)
     ports:
       - "443:443"
     networks:
@@ -18,9 +17,8 @@ services:
     depends_on:
       - wordpress
     container_name: nginx
+    restart: always
     # image_name: nginx
-    # depends_on:
-    #   - wordpress
     
   mariadb:
     build:
@@ -35,6 +33,10 @@ services:
     ports:
       - "3306:3306"
     restart: always
+    networks:
+      - incep_net
+    volumes:
+      - db-volume:/var/lib/mysql
 
   wordpress:
     build:
@@ -69,24 +71,3 @@ volumes:
 networks:
     incep_net:
         driver: bridge
-
-# version:
-
-# services:
-    #container:
-#       image:
-#       build:
-#       volumes:
-#       environment:
-#       container_name:
-#       image_name: 
-#       networks:
-#       ports:
-#       command:
-#       depends_on:
-
-# volumes:
-
-# networks:
-#       #for wordpress
-#       #for mariadb

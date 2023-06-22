@@ -1,14 +1,28 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    create_db.sh                                       :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: arafeeq <arafeeq@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/06/20 05:04:22 by arafeeq           #+#    #+#              #
+#    Updated: 2023/06/20 05:05:04 by arafeeq          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+#!bin/sh
+
 if [ ! -d "/var/lib/mysql/mysql" ]; then
 
-        chown -R mysql:mysql /var/lib/mysql
+		chown -R mysql:mysql /var/lib/mysql
 
-        # init database
-        mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm
+		# init database
+		mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm
 
-        tfile=`mktemp`
-        if [ ! -f "$tfile" ]; then
-                return 1
-        fi
+		tfile=`mktemp`
+		if [ ! -f "$tfile" ]; then
+				return 1
+		fi
 fi
 
 if [ ! -d "/var/lib/mysql/wordpress" ]; then

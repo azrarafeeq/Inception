@@ -6,7 +6,7 @@
 #    By: arafeeq <arafeeq@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/03 05:12:57 by arafeeq           #+#    #+#              #
-#    Updated: 2023/06/05 04:08:01 by arafeeq          ###   ########.fr        #
+#    Updated: 2023/06/20 05:17:43 by arafeeq          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,6 @@ down:
 clean: down
 	@printf "Cleaning images and data in voloumes\n"
 	@docker system prune -a
-	@docker system prune -a
 	@sudo rm -rf ~/data/wordpress/*
 	@sudo rm -rf ~/data/mariadb/*
 
@@ -42,6 +41,6 @@ fclean:
 	@sudo rm -rf ~/data/wordpress/*
 	@sudo rm -rf ~/data/mariadb/*
 
-re: down
+re:
 	@printf "Rebuilding\n"
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
