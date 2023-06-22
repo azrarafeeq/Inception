@@ -6,7 +6,7 @@
 #    By: arafeeq <arafeeq@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/02 05:03:42 by arafeeq           #+#    #+#              #
-#    Updated: 2023/06/05 03:57:39 by arafeeq          ###   ########.fr        #
+#    Updated: 2023/06/22 22:04:44 by arafeeq          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ FROM alpine:3.16
 #Arguments (stored in .env)
 ARG DB_NAME \
     DB_USER \
-    DB_PASS
+    DB_PASS \
+	DB_ROOT
 
 # dependencies needed
 RUN apk update && apk add --no-cache mariadb mariadb-client

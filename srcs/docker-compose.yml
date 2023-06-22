@@ -2,6 +2,7 @@ version: '3'
 
 services:
   nginx:
+    image: nginx
     build:
       context: .
       dockerfile: requirements/nginx/Dockerfile
@@ -18,9 +19,11 @@ services:
       - wordpress
     container_name: nginx
     restart: always
-    # image_name: nginx
     
   mariadb:
+    image: mariadb
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: requirements/mariadb/Dockerfile
@@ -39,6 +42,7 @@ services:
       - db-volume:/var/lib/mysql
 
   wordpress:
+    image: wordpress
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
@@ -46,6 +50,11 @@ services:
         DB_NAME: ${DB_NAME}
         DB_USER: ${DB_USER}
         DB_PASS: ${DB_PASS}
+        DOMAIN_NAME: ${DOMAIN_NAME}
+        WPADUSER: ${WPADUSER}
+        WPUSER1: ${WPUSER1}
+        WPADPASS: ${WPADPASS}
+        WPUSER1PASS: ${WPUSER1PASS}
     container_name: wordpress
     depends_on:
       - mariadb

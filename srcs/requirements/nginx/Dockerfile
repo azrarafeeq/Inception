@@ -6,7 +6,7 @@
 #    By: arafeeq <arafeeq@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/02 05:03:42 by arafeeq           #+#    #+#              #
-#    Updated: 2023/06/03 05:32:42 by arafeeq          ###   ########.fr        #
+#    Updated: 2023/06/22 22:07:16 by arafeeq          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,39 @@ FROM alpine:3.16
 
 # dependencies needed
 RUN apk update && apk upgrade && apk add --no-cache nginx
+
+COPY ./requirements/nginx/conf/nginx.conf /etc/nginx/http.d/nginx.conf
+
+RUN apk update && apk add --no-cache wget curl openssl
+
+WORKDIR /etc/nginx/ssl
+RUN curl -s https://api.github.com/repos/FiloSottile/mkcert/releases/latest \
+    | grep browser_download_url \
+    | grep linux-amd64 \
+    | cut -d '"' -f 4 \
+    | wget -qi - \
+    && mv mkcert-v*-linux-amd64 mkcert \
+    && chmod a+x mkcert
+# Generate SSL certificates using mkcert
+RUN ./mkcert cegbulef.42.fr \
+    && mv cegbulef.42.fr-key.pem cegbulef.42.fr.key \
+    && mv cegbulef.42.fr.pem cegbulef.42.fr.crt \
+    && rm mkcert
+# Change back to the previous working directory
+WORKDIR /
+
+# Set file permissions to readable for all
+RUN chmod 644 /etc/nginx/http.d/nginx.conf
+
+# Set ownership to the Nginx user and group
+RUN chown -R nginx:nginx /etc/nginx/http.d
+
+# Set file permissions for SSL keys
+RUN chmod 600 /etc/nginx/ssl/cegbulef.42.fr.crt
+RUN chmod 600 /etc/nginx/ssl/cegbulef.42.fr.key
+
+# Set ownership to the Nginx user and group
+RUN chown -R nginx:nginx /etc/nginx/http.d /etc/nginx/ssl
 
 # Exposing a container port
 # telling Docker that the container listens to a certain port
