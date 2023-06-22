@@ -32,9 +32,9 @@ RUN apk update && apk upgrade && apk add --no-cache \
       /etc/php8/php-fpm.d/www.conf && \
     rm -f /var/cache/apk/*
 
-RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-  && chmod +x wp-cli.phar && php wp-cli.phar --info \
-  && cp wp-cli.phar /usr/local/bin/wp
+# RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+#   && chmod +x wp-cli.phar && php wp-cli.phar --info \
+#   && cp wp-cli.phar /usr/local/bin/wp
 
 WORKDIR /var/www
 RUN wget https://wordpress.org/latest.zip && \
@@ -47,7 +47,7 @@ RUN wget https://wordpress.org/latest.zip && \
 # ENV
 
 # Copy the <file> file from <location> to the mentione location
-COPY ./requirements/wordpress/conf/wp-config-create.sh .
+COPY ./requirements/wordpress/conf/wp_config_create.sh .
 COPY ./requirements/wordpress/conf/setup.sh /usr/local/bin/
 
 RUN chmod 777 /usr/local/bin/setup.sh
