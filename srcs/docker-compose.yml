@@ -2,7 +2,6 @@ version: '3'
 
 services:
   nginx:
-    image: nginx
     build:
       context: .
       dockerfile: requirements/nginx/Dockerfile
@@ -11,7 +10,6 @@ services:
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - wp-volume:/var/www/
     ports:
-      - "80:80"
       - "443:443"
     networks:
       - incepnet
@@ -21,7 +19,6 @@ services:
     restart: always
     
   mariadb:
-    image: mariadb
     env_file:
       - .env
     build:
@@ -42,7 +39,6 @@ services:
       - db-volume:/var/lib/mysql
 
   wordpress:
-    image: wordpress
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
@@ -69,13 +65,13 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /home/${USER}/data/wordpress
+      device: $PWD/srcs/data/wordpress
 
   db-volume:
     driver_opts:
       o: bind
       type: none
-      device: /home/${USER}/data/mariadb
+      device: $PWD/srcs/data/mariadb
 
 networks:
     incepnet:

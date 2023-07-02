@@ -21,26 +21,28 @@ RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION}-openssl \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
-    php${PHP_VERSION}-redis \
     wget \
+	curl \
     unzip && \
     sed -i "s|listen = 127.0.0.1:9000|listen = 9000|g" \
       /etc/php8/php-fpm.d/www.conf && \
     sed -i "s|;listen.owner = nobody|listen.owner = nobody|g" \
       /etc/php8/php-fpm.d/www.conf && \
     sed -i "s|;listen.group = nobody|listen.group = nobody|g" \
-      /etc/php8/php-fpm.d/www.conf && \
+      /etc/php8/php-fpm.d/www.conf && mkdir -p /var/www && \
     rm -f /var/cache/apk/*
+
+WORKDIR /var/www
+
+RUN wget https://wordpress.org/latest.zip && \
+    unzip latest.zip && \
+    cp -rf wordpress/* . && \
+    rm -rf wordpress latest.zip
 
 # RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
 #   && chmod +x wp-cli.phar && php wp-cli.phar --info \
 #   && cp wp-cli.phar /usr/local/bin/wp
 
-WORKDIR /var/www
-RUN wget https://wordpress.org/latest.zip && \
-    unzip latest.zip && \
-    cp -rf wordpress/* . && \
-    rm -rf wordpress latest.zip
 
 # to create an environment variable.
 # We can access ENV values during the build, as well as once the container runs.
@@ -54,8 +56,11 @@ RUN chmod 777 /usr/local/bin/setup.sh
 RUN sh wp_config_create.sh && rm wp_config_create.sh && \
     chmod -R 0777 wp-content/
 
+EXPOSE 9000
 # command that is executed on 'docker container run'
-CMD ["/usr/local/bin/setup.sh"]
+# ENTRYPOINT ["/usr/local/bin/setup.sh"]
+# CMD ["/usr/local/bin/setup.sh"]
+CMD ["/usr/sbin/php-fpm8", "-F"]
 
 #to confugure executables that will always run after the container is initiated/launched
 # ENTRYPOINT
