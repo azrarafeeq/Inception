@@ -6,7 +6,7 @@
 #    By: arafeeq <arafeeq@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/02 05:03:42 by arafeeq           #+#    #+#              #
-#    Updated: 2023/06/22 22:07:16 by arafeeq          ###   ########.fr        #
+#    Updated: 2023/07/02 09:29:18 by arafeeq          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,9 +29,9 @@ RUN curl -s https://api.github.com/repos/FiloSottile/mkcert/releases/latest \
     && mv mkcert-v*-linux-amd64 mkcert \
     && chmod a+x mkcert
 # Generate SSL certificates using mkcert
-RUN ./mkcert cegbulef.42.fr \
-    && mv cegbulef.42.fr-key.pem cegbulef.42.fr.key \
-    && mv cegbulef.42.fr.pem cegbulef.42.fr.crt \
+RUN ./mkcert arafeeq.42.fr \
+    && mv arafeeq.42.fr-key.pem arafeeq.42.fr.key \
+    && mv arafeeq.42.fr.pem arafeeq.42.fr.crt \
     && rm mkcert
 # Change back to the previous working directory
 WORKDIR /
@@ -43,8 +43,8 @@ RUN chmod 644 /etc/nginx/http.d/nginx.conf
 RUN chown -R nginx:nginx /etc/nginx/http.d
 
 # Set file permissions for SSL keys
-RUN chmod 600 /etc/nginx/ssl/cegbulef.42.fr.crt
-RUN chmod 600 /etc/nginx/ssl/cegbulef.42.fr.key
+RUN chmod 600 /etc/nginx/ssl/arafeeq.42.fr.crt
+RUN chmod 600 /etc/nginx/ssl/arafeeq.42.fr.key
 
 # Set ownership to the Nginx user and group
 RUN chown -R nginx:nginx /etc/nginx/http.d /etc/nginx/ssl
