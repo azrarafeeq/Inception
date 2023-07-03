@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Dockerfile                                         :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: arafeeq <arafeeq@student.42.fr>            +#+  +:+       +#+         #
+#    By: ahassan <ahassan@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/02 05:03:42 by arafeeq           #+#    #+#              #
-#    Updated: 2023/06/22 22:04:44 by arafeeq          ###   ########.fr        #
+#    Updated: 2023/07/03 00:04:59 by ahassan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,8 @@ USER mysql
 
 # command that is executed on 'docker container run'
 # i.e the command to run the application
+EXPOSE 3306
 CMD ["/usr/bin/mysqld", "--skip-log-error"]
 
 #to confugure executables that will always run after the container is initiated/launched
-ENTRYPOINT ["sh", "db.sh"]
+# ENTRYPOINT ["sh", "db.sh"]
