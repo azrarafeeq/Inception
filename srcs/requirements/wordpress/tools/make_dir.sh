@@ -1,6 +1,7 @@
 #!/bin/bash
-if [ ! -d "$PWD/srcs/data" ]; then
-        mkdir $PWD/srcs/data
-        mkdir $PWD/srcs/data/mariadb
-        mkdir $PWD/srcs/data/wordpress
+
+if [ ! -d "/home/arafeeq/data" ]; then
+        mkdir /home/arafeeq/data
+        mkdir /home/arafeeq/data/mariadb
+        mkdir /home/arafeeq/data/wordpress
 fi

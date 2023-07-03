@@ -65,13 +65,13 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: $PWD/srcs/data/wordpress
+      device: /home/arafeeq/data/wordpress
 
   db-volume:
     driver_opts:
       o: bind
       type: none
-      device: $PWD/srcs/data/mariadb
+      device: /home/arafeeq/data/mariadb
 
 networks:
     incepnet:
