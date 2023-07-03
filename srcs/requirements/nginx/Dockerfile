@@ -6,7 +6,7 @@
 #    By: arafeeq <arafeeq@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/02 05:03:42 by arafeeq           #+#    #+#              #
-#    Updated: 2023/07/02 22:25:07 by arafeeq          ###   ########.fr        #
+#    Updated: 2023/07/03 11:10:53 by arafeeq          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,8 +23,8 @@ COPY /requirements/nginx/conf/nginx.conf /etc/nginx/http.d/
 
 RUN mkdir -p /etc/nginx/ssl/; rm -rf /etc/nginx/http.d/default.conf
 	
-COPY /requirements/nginx/tools/ngnix.crt /etc/nginx/http.d/
-COPY /requirements/nginx/tools/ngnix.key /etc/nginx/http.d/
+COPY ${CERT_} /etc/nginx/http.d/
+COPY ${KEY_} /etc/nginx/http.d/
 
 EXPOSE 443
 
