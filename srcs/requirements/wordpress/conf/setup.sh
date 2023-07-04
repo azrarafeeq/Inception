@@ -11,7 +11,3 @@ wp user create "$WPUSER1" "user1@student.42abudhabi.ae" \
   --role=author \
   --user_pass="$WPUSER1PASS" \
   --allow-root
-
-wp --allow-root --path=/var/www option update blogname "arafeeq Word-Press"
-wp --allow-root --path=/var/www option update blogdescription "Inception"
-wp --allow-root --path=/var/www option update blog_public 0
