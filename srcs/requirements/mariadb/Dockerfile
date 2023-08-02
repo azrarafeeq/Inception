@@ -54,7 +54,6 @@ USER mysql
 
 # command that is executed on 'docker container run'
 # i.e the command to run the application
-EXPOSE 3306
 CMD ["/usr/bin/mysqld", "--skip-log-error"]
 
 #to confugure executables that will always run after the container is initiated/launched

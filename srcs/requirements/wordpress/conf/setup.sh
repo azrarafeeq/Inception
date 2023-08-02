@@ -11,3 +11,9 @@ wp user create "$WPUSER1" "user1@student.42abudhabi.ae" \
   --role=author \
   --user_pass="$WPUSER1PASS" \
   --allow-root
+
+wp theme install twentytwentyone --activate --allow-root
+
+wp plugin update --all --allow-root
+
+/usr/sbin/php-fpm8 -F

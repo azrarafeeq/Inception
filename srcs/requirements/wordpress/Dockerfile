@@ -1,13 +1,15 @@
-#the image used for the conatainer
+# Use Alpine Linux 3.16 as the base image
 FROM alpine:3.16
 
-#Arguments
+# Set the default PHP version to 8.2.5 and specify some database credentials as build arguments
 ARG PHP_VERSION=8 \
     DB_NAME \
     DB_USER \
-    DB_PASS
+    DB_PASS \
+    WPADPASS \
+    WPUSER1PASS
 
-# dependencies needed
+# Update the package repository, upgrade installed packages, and install PHP and some PHP extensions
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
@@ -22,49 +24,37 @@ RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
     wget \
-	curl \
+    curl \
+    php-phar \
     unzip && \
+    # Configure the PHP-FPM daemon to listen on port 9000
     sed -i "s|listen = 127.0.0.1:9000|listen = 9000|g" \
       /etc/php8/php-fpm.d/www.conf && \
     sed -i "s|;listen.owner = nobody|listen.owner = nobody|g" \
       /etc/php8/php-fpm.d/www.conf && \
     sed -i "s|;listen.group = nobody|listen.group = nobody|g" \
-      /etc/php8/php-fpm.d/www.conf && mkdir -p /var/www && \
+      /etc/php8/php-fpm.d/www.conf && \
+    # Clean up the package cache to reduce the image size
     rm -f /var/cache/apk/*
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+  && chmod +x wp-cli.phar && php wp-cli.phar --info \
+  && cp wp-cli.phar /usr/local/bin/wp
 
+# Set the working directory to /var/www and download and extract the latest version of WordPress
 WORKDIR /var/www
-
 RUN wget https://wordpress.org/latest.zip && \
     unzip latest.zip && \
     cp -rf wordpress/* . && \
     rm -rf wordpress latest.zip
 
-# RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-#   && chmod +x wp-cli.phar && php wp-cli.phar --info \
-#   && cp wp-cli.phar /usr/local/bin/wp
-
-
-# to create an environment variable.
-# We can access ENV values during the build, as well as once the container runs.
-# ENV
-
-# Copy the <file> file from <location> to the mentione location
+# Copy a script to the container that generates the WordPress configuration file and run it
 COPY ./requirements/wordpress/conf/wp_config_create.sh .
 COPY ./requirements/wordpress/conf/setup.sh /usr/local/bin/
 
+# Grant write permission to the wp-content directory to avoid file permission issues
 RUN chmod 777 /usr/local/bin/setup.sh
 RUN sh wp_config_create.sh && rm wp_config_create.sh && \
     chmod -R 0777 wp-content/
 
-EXPOSE 9000
-# command that is executed on 'docker container run'
-# ENTRYPOINT ["/usr/local/bin/setup.sh"]
-# CMD ["/usr/local/bin/setup.sh"]
-CMD ["/usr/sbin/php-fpm8", "-F"]
-
-#to confugure executables that will always run after the container is initiated/launched
-# ENTRYPOINT
-
-# Exposing a container port (access from outside)
-# telling Docker that the container listens to a certain port
-# EXPOSE <port>
+# Run the script to set up the WordPress details
+CMD ["/usr/local/bin/setup.sh"]
