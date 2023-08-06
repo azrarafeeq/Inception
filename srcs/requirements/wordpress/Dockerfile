@@ -56,5 +56,7 @@ RUN chmod 777 /usr/local/bin/setup.sh
 RUN sh wp_config_create.sh && rm wp_config_create.sh && \
     chmod -R 0777 wp-content/
 
+EXPOSE 9000
+
 # Run the script to set up the WordPress details
 CMD ["/usr/local/bin/setup.sh"]

@@ -2,6 +2,7 @@ version: '3'
 
 services:
   nginx:
+    image: nginx
     build:
       context: .
       dockerfile: requirements/nginx/Dockerfile
@@ -19,6 +20,7 @@ services:
   mariadb:
     env_file:
       - .env
+    image: mariadb
     build:
       context: .
       dockerfile: requirements/mariadb/Dockerfile
@@ -37,6 +39,7 @@ services:
   wordpress:
     env_file:
       - .env
+    image: wordpress
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
